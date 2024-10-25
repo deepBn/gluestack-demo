@@ -5,13 +5,42 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Redirect } from "expo-router";
-
-const isSignedIn = false;
+import { Redirect, router } from "expo-router";
+import { useAtomValue } from "jotai";
+import { sessionIdAtom } from "@/atoms/auth";
+import { Box } from "@/components/ui/box";
+import { Spinner } from "@/components/ui/spinner";
+import colors from "tailwindcss/colors";
+import { useEffect, useState } from "react";
+import { accountAtom } from "@/atoms/appwrite";
 
 export default function HomeScreen() {
-  if (!isSignedIn) {
+  const sessionId = useAtomValue(sessionIdAtom);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const account = useAtomValue(accountAtom);
+
+  useEffect(() => {
+    setCheckingSession(true);
+    (async () => {
+      try {
+        await account.getSession(sessionId as string);
+      } catch (error) {
+        router.replace("/auth/signin");
+      }
+    })();
+    setCheckingSession(false);
+  }, []);
+
+  if (!sessionId) {
     return <Redirect href="/auth/signin" />;
+  }
+
+  if (checkingSession) {
+    return (
+      <Box className="flex-grow flex-1 justify-center items-center bg-blue-100">
+        <Spinner size="large" color={colors.amber[600]} />
+      </Box>
+    );
   }
 
   return (
