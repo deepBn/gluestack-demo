@@ -15,6 +15,7 @@ import { useController, useFormContext } from "react-hook-form";
 interface FormFieldProps {
   name: string;
   label: string;
+  placeholder?: string;
   helperText?: string;
   fieldType?: "text" | "password";
 }
@@ -24,6 +25,7 @@ const FormField: React.FC<FormFieldProps> = ({
   label,
   helperText,
   fieldType = "text",
+  placeholder,
 }) => {
   const { control } = useFormContext();
   const { field, fieldState } = useController({
@@ -40,7 +42,7 @@ const FormField: React.FC<FormFieldProps> = ({
       <Input className="my-1">
         <InputField
           type={fieldType}
-          placeholder="password"
+          placeholder={placeholder}
           value={field.value}
           onChangeText={(val) => field.onChange(val)}
         />

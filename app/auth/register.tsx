@@ -61,13 +61,14 @@ const Register = () => {
           className="w-full"
         >
           <VStack className="w-full rounded-md mt-2">
-            <FormField name="name" label="Name" />
-            <FormField name="email" label="Email" />
+            <FormField name="name" label="Name" placeholder="John Doe" />
+            <FormField name="email" label="Email" placeholder="john@doe.com" />
             <FormField
               name="password"
               label="Password"
               fieldType="password"
               helperText="Atleast 6 characters are required."
+              placeholder={"********"}
             />
 
             <Button
