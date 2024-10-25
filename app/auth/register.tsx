@@ -11,8 +11,7 @@ import { accountAtom } from "@/atoms/appwrite";
 import { useAtomValue } from "jotai";
 import { ID } from "react-native-appwrite";
 import { useState } from "react";
-import { useToast } from "@/components/ui/toast";
-import CommonToast from "@/components/CommonToast";
+import useCommonToast from "@/hooks/useCommonToast";
 
 type FormValues = {
   email: string;
@@ -22,7 +21,7 @@ type FormValues = {
 
 const Register = () => {
   const account = useAtomValue(accountAtom);
-  const toast = useToast();
+  const showCommonToast = useCommonToast();
   const methods = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
 
@@ -36,29 +35,13 @@ const Register = () => {
         formValues.name
       );
       router.replace("/auth/signin");
-      // @ts-ignore
-      toast.show({
-        placement: "bottom",
-        duration: 3000,
-        render: ({ id }) => (
-          // @ts-ignore
-          <CommonToast
-            id={id}
-            description="Account created successfully. Please login to continue."
-            action="success"
-          />
-        ),
-      });
+      showCommonToast(
+        "Account created successfully. Please login to continue.",
+        "success"
+      );
     } catch (error) {
       // @ts-ignore
-      toast.show({
-        placement: "bottom",
-        duration: 3000,
-        render: ({ id }) => (
-          // @ts-ignore
-          <CommonToast id={id} description={error.message} action="error" />
-        ),
-      });
+      showCommonToast(error.message, "error");
     }
     setLoading(false);
   };
